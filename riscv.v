@@ -130,6 +130,7 @@ module RISCV (
                      (aluSrcB == `ALU_SRC_B_IMM_I_TYPE) ? { {20{ir[31]}}, ir[31:20] } :
                      (aluSrcB == `ALU_SRC_B_IMM_B_TYPE) ? { {19{ir[31]}}, ir[31], ir[7], ir[30:25], ir[11:8], 1'b0 } :
                      (aluSrcB == `ALU_SRC_B_IMM_J_TYPE) ? { {11{ir[31]}}, ir[31], ir[19:12], ir[20], ir[30:21], 1'b0 } :
+                     (aluSrcB == `ALU_SRC_B_IMM_S_TYPE) ? { {20{ir[31]}}, ir[31:25], ir[11:7] } :
                      0;
 
   assign dataAddress = aluResult;

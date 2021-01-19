@@ -271,7 +271,7 @@ module ControlUnit(
             state           <= FETCH0;
           end
         end
-        
+        else
         // Stores
         if (opcode == 7'b0100011)
         begin
