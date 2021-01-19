@@ -25,7 +25,7 @@ module ALU(
         `ALU_OR:    res = a | b;                                        // OR
         `ALU_AND:   res = a & b;                                        // AND
         `ALU_SUB:   res = a - b;                                        // SUB
-        `ALU_SRA:   res = a >>> b[4:0];                                 // SRA
+        `ALU_SRA:   res = $signed(a) >>> b[4:0];                        // SRA
         `ALU_A:     res = a;                                            // A
         `ALU_B:     res = b;                                            // B
         `ALU_EQ:    res = (a == b) ? 32'b1 : 32'b0;                     // EQ
