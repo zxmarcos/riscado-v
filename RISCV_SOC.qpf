@@ -1,0 +1,6 @@
+DATE = "22:34:01 January 16, 2021"
+QUARTUS_VERSION = "14.0"
+
+# Revisions
+
+PROJECT_REVISION = "RISCV_SOC"
