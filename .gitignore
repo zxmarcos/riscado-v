@@ -74,3 +74,5 @@ simulation/
 PLLJ_PLLSPE_INFO.txt
 RISCV_SOC.htm
 c5_pin_model_dump.text
+*.bin
+.vs/

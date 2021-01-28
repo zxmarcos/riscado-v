@@ -26,6 +26,6 @@ module RegisterFile (
       registers[dst] <= dataIn;
   end
   
-  assign oa = registers[ia];
-  assign ob = registers[ib];
+  assign oa = ia == 0 ? 32'b0 : registers[ia];
+  assign ob = ib == 0 ? 32'b0 : registers[ib];
 endmodule

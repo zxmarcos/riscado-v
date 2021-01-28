@@ -2,6 +2,7 @@
  * Copyright (c) 2021, Marcos Medeiros
  * Licensed under BSD 3-clause.
  */
+ /*
 module soctop(input clk, input reset, output [31:0] do);
     
     
@@ -31,3 +32,4 @@ module soctop(input clk, input reset, output [31:0] do);
     
     
 endmodule
+*/

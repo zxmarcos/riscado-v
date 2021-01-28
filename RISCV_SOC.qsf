@@ -413,6 +413,10 @@ set_global_assignment -name EDA_TEST_BENCH_NAME SOCTOP_TB -section_id eda_simula
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id SOCTOP_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME SOCTOP_TB -section_id SOCTOP_TB
 set_global_assignment -name EDA_TEST_BENCH_FILE soctop_tb.v -section_id SOCTOP_TB
+set_global_assignment -name MIF_FILE riscvlogo.mif
+set_global_assignment -name VERILOG_FILE vram.v
+set_global_assignment -name VERILOG_FILE vga_encoder.v
+set_global_assignment -name VERILOG_FILE clk_divider.v
 set_global_assignment -name VERILOG_INCLUDE_FILE riscvdefs.vh
 set_global_assignment -name VERILOG_FILE soctop.v
 set_global_assignment -name VERILOG_FILE riscv.v
@@ -425,4 +429,8 @@ set_global_assignment -name SDC_FILE RISCV_SOC.SDC
 set_global_assignment -name VERILOG_TEST_BENCH_FILE ram_tb.v
 set_global_assignment -name VERILOG_TEST_BENCH_FILE soctop_tb.v
 set_global_assignment -name VERILOG_FILE load_store.v
+set_global_assignment -name VERILOG_FILE rom.v
+set_global_assignment -name VERILOG_FILE gpu.v
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name SMART_RECOMPILE ON
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

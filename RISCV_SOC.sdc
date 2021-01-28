@@ -13,13 +13,13 @@ create_clock -period 20.000ns [get_ports CLOCK4_50]
 
 create_clock -period "100 MHz" -name clk_dram [get_ports DRAM_CLK]
 # VGA : 640x480@60Hz
-#create_clock -period "25.18 MHz" -name clk_vga [get_ports VGA_CLK]
+create_clock -period "25.18 MHz" -name clk_vga [get_ports VGA_CLK]
 # VGA : 800x600@60Hz
 #create_clock -period "40.0 MHz" -name clk_vga [get_ports VGA_CLK]
 # VGA : 1024x768@60Hz
 #create_clock -period "65.0 MHz" -name clk_vga [get_ports VGA_CLK]
 # VGA : 1280x1024@60Hz
-create_clock -period "108.0 MHz" -name clk_vga [get_ports VGA_CLK]
+#create_clock -period "108.0 MHz" -name clk_vga [get_ports VGA_CLK]
 
 # for enhancing USB BlasterII to be reliable, 25MHz
 create_clock -name {altera_reserved_tck} -period 40 {altera_reserved_tck}

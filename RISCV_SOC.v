@@ -4,44 +4,9 @@
 //=======================================================
 
 module RISCV_SOC(
-
-	//////////// CLOCK //////////
 	input 		          		CLOCK_50,
-/*	input 		          		CLOCK2_50,
-	input 		          		CLOCK3_50,
-	input 		          		CLOCK4_50,
-
-	//////////// SDRAM //////////
-	output		    [12:0]		DRAM_ADDR,
-	output		     [1:0]		DRAM_BA,
-	output		          		DRAM_CAS_N,
-	output		          		DRAM_CKE,
-	output		          		DRAM_CLK,
-	output		          		DRAM_CS_N,
-	inout 		    [15:0]		DRAM_DQ,
-	output		          		DRAM_LDQM,
-	output		          		DRAM_RAS_N,
-	output		          		DRAM_UDQM,
-	output		          		DRAM_WE_N,
-*/
-	//////////// SEG7 //////////
-	output		     [6:0]		HEX0,
-	output		     [6:0]		HEX1,
-	output		     [6:0]		HEX2,
-	output		     [6:0]		HEX3,
-	output		     [6:0]		HEX4,
-	output		     [6:0]		HEX5,
-
-	//////////// KEY //////////
-	input 		     [3:0]		KEY
-/*
-	//////////// LED //////////
-	output		     [9:0]		LEDR,
-
-	//////////// SW //////////
-	input 		     [9:0]		SW,
-
-	//////////// VGA //////////
+	input 		     [3:0]		KEY,
+	output reg		  [9:0]		LEDR,
 	output		     [7:0]		VGA_B,
 	output		          		VGA_BLANK_N,
 	output		          		VGA_CLK,
@@ -49,11 +14,7 @@ module RISCV_SOC(
 	output		          		VGA_HS,
 	output		     [7:0]		VGA_R,
 	output		          		VGA_SYNC_N,
-	output		          		VGA_VS,
-
-	//////////// GPIO_1, GPIO_1 connect to GPIO Default //////////
-	inout 		    [35:0]		GPIO
-*/
+	output		          		VGA_VS
 );
 
 
@@ -62,19 +23,103 @@ module RISCV_SOC(
 //  REG/WIRE declarations
 //=======================================================
 
-	wire [31:0] data;
+	
+	/*wire [31:0] data;
 	assign HEX0 = data[7:0];
 	assign HEX1 = data[14:8];
 	assign HEX2 = data[21:15];
 	assign HEX3 = data[28:22];
-	assign HEX4 = data[31:29];
+	assign HEX4 = data[31:29];*/
 
-	soctop st(.clk(CLOCK_50), .reset(KEY[0]), .do(data));
-
-
+	//soctop st(.clk(CLOCK_50), .reset(KEY[0]), .do(data));
 //=======================================================
 //  Structural coding
 //=======================================================
+    wire [31:0] cpuDataOut;
+    wire [31:0] busAddress;
+    wire        busWriteEnable;
+    
+    assign do = busAddress;
+	 
+	 // MEMORY MAP
+	 // 0000_0000h - 000F_FFFF ROM 1MB max
+	 // 0010_0000h - 001F_FFFF RAM 1MB max
+	 // 0020_0000h - 002F_FFFF VRAM 1MB max
+	 // 8000_0000h - 8000_0FFF IO
+	 wire ioSelect  = busAddress[31];
+	 wire gpuSelect  = busAddress[21];
+	 wire romSelect = ~busAddress[20];
+	 wire ramSelect = busAddress[20];
+	 
+	 
+	 wire [31:0] ramDataOut;
+	 wire [31:0] romDataOut;
+	 wire [31:0] gpuDataOut;
+	 
+	 wire clk = CLOCK_50;
+	 reg [31:0] ioDataOut;
+	 
+	 wire [31:0] busDataIn = ioSelect ? ioDataOut :
+									 gpuSelect ? gpuDataOut :
+									 ramSelect ? ramDataOut :
+									 romDataOut;
+									 
+									 
+	 
+	 always @(posedge clk)
+	 begin
+		if (ioSelect)
+		begin
+			if (busWriteEnable)
+				LEDR <= cpuDataOut[9:0];
+			else
+				ioDataOut <= LEDR;
+		end
+	 end
+	 
+	GPU gpu(
+		.clk(clk),
+		.enable(gpuSelect),
+		.busAddress(busAddress[17:1]),
+		.busWriteEnable(busWriteEnable),
+		.busDataOut(gpuDataOut),
+		.busDataIn(cpuDataOut),
+		
+		.VGA_B(VGA_B),
+		.VGA_BLANK_N(VGA_BLANK_N),
+		.VGA_CLK(VGA_CLK),
+		.VGA_G(VGA_G),
+		.VGA_HS(VGA_HS),
+		.VGA_R(VGA_R),
+		.VGA_SYNC_N(VGA_SYNC_N),
+		.VGA_VS(VGA_VS)
+	);
+	
+	 ROM rom(
+        .clk(clk),
+		  .enable(romSelect),
+        .address({ 12'b0, busAddress[19:0] }),
+        .dataIn(cpuDataOut),
+        .dataOut(romDataOut)
+    );
+	 
+    RAM ram(
+        .clk(clk),
+		  .enable(ramSelect),
+        .address({ 12'b0, busAddress[19:0] }),
+        .dataIn(cpuDataOut),
+        .writeEnable(busWriteEnable),
+        .dataOut(ramDataOut)
+    );
+        
+    RISCV cpu(
+        .clk(clk),
+        .reset(~KEY[0]),
+        .dataIn(busDataIn),
+        .dataOut(cpuDataOut),
+        .address(busAddress),
+        .writeEnable(busWriteEnable)
+    );
 
 
 
