@@ -106,7 +106,7 @@ module ControlUnit(
           aluSrcB         <= `ALU_SRC_B_IMM_U_TYPE;
           aluOperation    <= `ALU_ADD;
           regWriteEnable  <= 1;
-          pcWriteEnable   <= 1;
+          pcWriteEnable   <= 0;
           state           <= FETCH0;
         end
         else
